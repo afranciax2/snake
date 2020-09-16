@@ -48,13 +48,13 @@ def izquierda():
 # Función para mover a la serpierte 
 def movimiento():
     if cabeza.direction == "arriba":
-        y = cabeza.ycor() # Método que berinda la corrdena "Y"
+        y = cabeza.ycor() # Método que brinda la cordenada "Y"
         cabeza.sety(y + 20)
     if cabeza.direction == "abajo":
         y = cabeza.ycor()
         cabeza.sety(y - 20)
     if cabeza.direction == "derecha":
-        x = cabeza.xcor() # Método que Te brinda la corrdena "X"
+        x = cabeza.xcor() # Método que brinda la cordenada "X"
         cabeza.setx(x + 20)
     if cabeza.direction == "izquierda":
         x = cabeza.xcor()
@@ -69,6 +69,23 @@ ventana.onkeypress(izquierda, "Left")
         
 while True:
     ventana.update()
+
+    # Tocar borde de pantanlla y detener desplezamieto de la serpiente
+    if cabeza.xcor() > 290 or cabeza.xcor() < -290 or cabeza.ycor() > 280 or cabeza.ycor() < -290:
+        time.sleep(1) # Para dar pausa
+        cabeza.goto(0, 0)
+        cabeza.direction = "stop"
+
+        # Limpiar listas de segmentos
+        for esconder in cola:
+            #Conservar código
+            #1 esconder.goto(1000, 1000)
+            #esconder.hideturtle()
+        #2 cola.clear()
+            esconder.hideturtle()
+        cola.clear()
+
+
     # Comparar la distancia entre los 2 objetos (cabeza y comida)
     # Tanto la cabeza de la serpiente como la comida tiene 20x20 pixeles
     # Si la distancia es menor entre ambos objetos, significa que se han tocado
