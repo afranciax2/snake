@@ -4,10 +4,14 @@ import random
 
 posponer = 0.1
 
+#Crear variables para el marcador
+score = 0
+high_score = 0
+
 #Crear ventana del juego
 ventana = turtle.Screen()
 ventana.title("SNAKE GAME")
-ventana.bgcolor("black")
+ventana.bgcolor("#1D1D1E")
 ventana.setup(width=600, height=600)
 ventana.tracer(0)
 
@@ -30,6 +34,15 @@ comida.goto(79, 100)
 
 # Cola de la serpiente
 cola = []
+
+# Crear marcador de puntos
+texto = turtle.Turtle()
+texto.speed(0)
+texto.color("white")
+texto.penup()
+texto.hideturtle()
+texto.goto(0, 250)
+texto.write("Score: 0         High Score: 0", align = "center", font=("Courier", 20, "normal"))
 
 #Funciones de movimiento
 def arriba():
@@ -70,20 +83,21 @@ ventana.onkeypress(izquierda, "Left")
 while True:
     ventana.update()
 
-    # Tocar borde de pantanlla y detener desplezamieto de la serpiente
+    # Tocar borde de pantanlla y detener desplazamiento de la serpiente
     if cabeza.xcor() > 290 or cabeza.xcor() < -290 or cabeza.ycor() > 280 or cabeza.ycor() < -290:
         time.sleep(1) # Para dar pausa
         cabeza.goto(0, 0)
         cabeza.direction = "stop"
 
-        # Limpiar listas de segmentos
+        # Limpiar listas, que es la cola de la serpiente
         for esconder in cola:
-            #Conservar código
-            #1 esconder.goto(1000, 1000)
-            #esconder.hideturtle()
-        #2 cola.clear()
             esconder.hideturtle()
         cola.clear()
+
+        #Resetear marcador
+        score = 0
+        texto.clear()
+        texto.write("Score: {}      High Score: {}".format(score,high_score), align = "center", font=("Courier", 20, "normal"))
 
 
     # Comparar la distancia entre los 2 objetos (cabeza y comida)
@@ -102,7 +116,15 @@ while True:
         nueva_cola.color("grey")
         nueva_cola.penup()
         cola.append(nueva_cola)
-    
+
+        #Aumentar marcador
+        score += 10
+
+        if score > high_score:
+            high_score = score
+        texto.clear()
+        texto.write("Score: {}      High Score: {}".format(score,high_score), align = "center", font=("Courier", 20, "normal"))
+
     # Agregar cola al cuerpo de la serpiente
     total_cola = len(cola)
     for i in range(total_cola-1, 0, -1):
@@ -115,4 +137,22 @@ while True:
         cola[0].goto(x, y)
 
     movimiento()
+
+    # Colisionar con cola
+    for colisionar in cola:
+        if colisionar.distance(cabeza) < 20:
+            time.sleep(1) # Para dar pausa
+            cabeza.goto(0, 0)
+            cabeza.direction = "stop"
+
+            # Limpiar listas de segmentos
+            for esconder in cola:
+                esconder.hideturtle()
+            cola.clear()
+
+            # Resetear marcado cuando colisiona con cola
+            score = 0
+            texto.clear()
+            texto.write("Score: {}      High Score: {}".format(score,high_score), align = "center", font=("Courier", 20, "normal"))
+
     time.sleep(posponer)
